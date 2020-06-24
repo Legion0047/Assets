@@ -6,7 +6,9 @@ from Entity import entity as entity
 class Assets(Frame):
 
     def budget(self):
-        print("hello")
+        for i in self.assets:
+            if self.factions.get() == i.name:
+                self.budget_lbl.configure(text=i.calcBudget())
 
     def switch(self):
         for i in self.assets:
@@ -21,10 +23,12 @@ class Assets(Frame):
 
         self.assets = []
 
-        self.assets.append(entity(self, "UNSC", 0, 0, 0, [entity(self, "Core Sector", 5, 1, 10, [entity(self, "Farming", 1, 0, 0)]), entity(self, "East Sector", 5, 1, 10, [entity(self, "Military", 1, 0, 0)])]))
-        self.assets.append(entity(self, "Hiigarans", 0, 0, 0, [entity(self, "Cor-Hig", 1, 0, 0)]))
-        self.assets.append(entity(self, "Tau", 0, 0, 0, [entity(self, "Tau", 1, 0, 0)]))
+        self.assets.append(entity(self, "UNSC", 0, 0, 0, 0, [entity(self, "Core Sector", 0,5, 1, 10, [entity(self, "Farming", 1, 1, 0, 0), entity(self, "Military", 1, 1, 0, 0)]), entity(self, "South Sector", 0, 5, 1, 10, [entity(self, "Farming", 1, 1, 0, 0), entity(self, "Military", 1, 1, 0, 0)]), entity(self, "East Sector", 0, 5, 1, 10, [entity(self, "Farming", 1, 1, 0, 0), entity(self, "Military", 1, 1, 0, 0)])]))
+        self.assets.append(entity(self, "Hiigarans", 0, 0, 0, 0, [entity(self, "Cor-Hig", 6, 1, 0, 0)]))
+        self.assets.append(entity(self, "Tau", 0, 0, 0, 0, [entity(self, "Tau", 4, 2, 4, 3)]))
 
+
+        # Faction Switch
 
         self.factions = Combobox(self, width=15)
 
@@ -35,16 +39,21 @@ class Assets(Frame):
         self.switch_btn = Button(self, text="switch faction", command=self.switch)
         self.switch_btn.grid(column=1, row=0, sticky=W)
 
+        # Calculate Budget
+
+        self.budget_lbl = Label(self, text="0")
+        self.budget_lbl.grid(column=2, row=0, sticky=W)
+
+        self.budget_btn = Button(self, text="Calculate Budget", command=self.budget)
+        self.budget_btn.grid(column=3, row=0, sticky=W)
+
         # Blanks
 
-        blanks = []
-
-        for i in range(10):
-            blanks.append(Label(self, width=25, background="gray"))
-            blanks[i].grid(column=i, row=1)
+        for i in range(20):
+            blank = Label(self, width=25, background="gray")
+            blank.grid(column=i, row=1)
 
         # Labels
-
 
         name = Label(self, text="Name", width=20)
         name.grid(column=0, row=2)
@@ -52,11 +61,14 @@ class Assets(Frame):
         dev = Label(self, text="Development", width=20)
         dev.grid(column=0, row=3)
 
+        dev = Label(self, text="Bonus", width=20)
+        dev.grid(column=0, row=4)
+
         mult = Label(self, text="Multiplier", width=20)
-        mult.grid(column=0, row=4)
+        mult.grid(column=0, row=5)
 
         raw = Label(self, text="Income", width=20)
-        raw.grid(column=0, row=5)
+        raw.grid(column=0, row=6)
 
 
 
