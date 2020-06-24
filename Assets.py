@@ -17,6 +17,10 @@ class Assets(Frame):
             else:
                 i.destroy()
 
+    def update(self):
+        for i in self.assets:
+            if self.factions.get() == i.name:
+                i.update()
 
     def __init__(self, window):
         super(Assets, self).__init__(window)
@@ -27,7 +31,6 @@ class Assets(Frame):
         self.assets.append(entity(self, "Hiigarans", 0, 0, 0, 0, [entity(self, "Cor-Hig", 6, 1, 0, 0)]))
         self.assets.append(entity(self, "Tau", 0, 0, 0, 0, [entity(self, "Tau", 4, 2, 4, 3)]))
 
-
         # Faction Switch
 
         self.factions = Combobox(self, width=15)
@@ -36,38 +39,43 @@ class Assets(Frame):
             self.factions['values'] = (*self.factions['values'], i.name)
         self.factions.grid(column=0, row=0, sticky=W)
 
-        self.switch_btn = Button(self, text="switch faction", command=self.switch)
+        self.switch_btn = Button(self, width=15, text="switch faction", command=self.switch)
         self.switch_btn.grid(column=1, row=0, sticky=W)
 
         # Calculate Budget
 
-        self.budget_lbl = Label(self, text="0")
+        self.budget_lbl = Label(self, width=15, text="0")
         self.budget_lbl.grid(column=2, row=0, sticky=W)
 
-        self.budget_btn = Button(self, text="Calculate Budget", command=self.budget)
+        self.budget_btn = Button(self, width=15, text="Calculate Budget", command=self.budget)
         self.budget_btn.grid(column=3, row=0, sticky=W)
+
+        # Update stats
+
+        self.update_btn = Button(self, width=15, text="Update Stats", command=self.update)
+        self.update_btn.grid(column=4, row=0, sticky=W)
 
         # Blanks
 
         for i in range(20):
-            blank = Label(self, width=25, background="gray")
+            blank = Label(self, width=20, background="gray")
             blank.grid(column=i, row=1)
 
         # Labels
 
-        name = Label(self, text="Name", width=20)
+        name = Label(self, text="Name", width=15)
         name.grid(column=0, row=2)
 
-        dev = Label(self, text="Development", width=20)
+        dev = Label(self, text="Development", width=15)
         dev.grid(column=0, row=3)
 
-        dev = Label(self, text="Bonus", width=20)
+        dev = Label(self, text="Bonus", width=15)
         dev.grid(column=0, row=4)
 
-        mult = Label(self, text="Multiplier", width=20)
+        mult = Label(self, text="Multiplier", width=15)
         mult.grid(column=0, row=5)
 
-        raw = Label(self, text="Income", width=20)
+        raw = Label(self, text="Income", width=15)
         raw.grid(column=0, row=6)
 
 
