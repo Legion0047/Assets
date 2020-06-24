@@ -13,16 +13,15 @@ class entity:
         self.raw = raw
         self.entities = entities
 
+        self.name_e = Entry(window, width=15)
 
-        self.name_e = Entry(window, width=20)
+        self.dev_e = Entry(window, width=15)
 
-        self.dev_e = Entry(window, width=20)
+        self.bonus_e = Entry(window, width=15)
 
-        self.bonus_e = Entry(window, width=20)
+        self.mult_e = Entry(window, width=15)
 
-        self.mult_e = Entry(window, width=20)
-
-        self.raw_e = Entry(window, width=20)
+        self.raw_e = Entry(window, width=15)
 
     def calcBudget(self, bonus=0):
         current = self.raw
@@ -36,27 +35,27 @@ class entity:
             return int(current*(1+(self.mult/10)))
 
     def place(self, window, col, row):
-        self.name_e = Entry(window, width=20)
+        self.name_e = Entry(window, width=15)
         self.name_e.delete(0, END)
         self.name_e.insert(0, self.name)
         self.name_e.grid(column=col, row=row)
 
-        self.dev_e = Entry(window, width=20)
+        self.dev_e = Entry(window, width=15)
         self.dev_e.delete(0, END)
         self.dev_e.insert(0, self.dev)
         self.dev_e.grid(column=col, row=row+1)
 
-        self.bonus_e = Entry(window, width=20)
+        self.bonus_e = Entry(window, width=15)
         self.bonus_e.delete(0, END)
         self.bonus_e.insert(0, self.dev)
         self.bonus_e.grid(column=col, row=row+2)
 
-        self.mult_e = Entry(window, width=20)
+        self.mult_e = Entry(window, width=15)
         self.mult_e.delete(0, END)
         self.mult_e.insert(0, self.mult)
         self.mult_e.grid(column=col, row=row+3)
 
-        self.raw_e = Entry(window, width=20)
+        self.raw_e = Entry(window, width=15)
         self.raw_e.delete(0, END)
         self.raw_e.insert(0, self.raw)
         self.raw_e.grid(column=col, row=row+4)
@@ -80,3 +79,13 @@ class entity:
         if self.entities is not None:
             for i in self.entities:
                 i.destroy()
+
+    def update(self):
+        self.name = self.name_e.get()
+        self.dev = int(self.dev_e.get())
+        self.bonus = int(self.bonus_e.get())
+        self.mult = int(self.mult_e.get())
+        self.raw = int(self.raw_e.get())
+        if self.entities is not None:
+            for i in self.entities:
+                i.update()
