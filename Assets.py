@@ -1,3 +1,4 @@
+from datetime import datetime
 from tkinter import *
 from tkinter.ttk import *
 
@@ -5,18 +6,48 @@ from Entity import entity as entity
 
 class Assets(Frame):
 
+    def remove(self):
+        for i in range(len(self.assets)):
+            if self.factions.get() == self.assets[i].name:
+                self.assets.pop(i)
+                break
+
+        self.factions['values'] = ''
+
+        for i in self.assets:
+            self.factions['values'] = (*self.factions['values'], i.name)
+
+        if len(self.factions['values']) != 0:
+            self.factions.current(len(self.factions['values'])-1)
+            self.switch()
+
+
+    def add(self):
+        self.assets.append(entity(self))
+
+        self.factions['values'] = (*self.factions['values'], self.assets[-1].name)
+
+        if len(self.factions['values']) != 0:
+            self.factions.current(len(self.factions['values'])-1)
+            self.switch()
+
+    def clock(self):
+        self.update()
+        self.after(1000, self.clock)  # run itself again after 1000 ms
+
     def budget(self):
         for i in self.assets:
             if self.factions.get() == i.name:
                 self.budget_lbl.configure(text=i.calcBudget())
 
+    # Switches Factions, destroys old entries, places new entries
     def switch(self):
         for i in self.assets:
+            i.destroy_gui()
             if self.factions.get() == i.name:
-                i.place(self, 1, 2)
-            else:
-                i.destroy()
+                i.place(1, 2)
 
+    # Updates the stats of an factions entities
     def update(self):
         for i in self.assets:
             if self.factions.get() == i.name:
@@ -27,10 +58,6 @@ class Assets(Frame):
 
         self.assets = []
 
-        self.assets.append(entity(self, "UNSC", 0, 0, 0, 0, [entity(self, "Core Sector", 0,5, 1, 10, [entity(self, "Farming", 1, 1, 0, 0), entity(self, "Military", 1, 1, 0, 0)]), entity(self, "South Sector", 0, 5, 1, 10, [entity(self, "Farming", 1, 1, 0, 0), entity(self, "Military", 1, 1, 0, 0)]), entity(self, "East Sector", 0, 5, 1, 10, [entity(self, "Farming", 1, 1, 0, 0), entity(self, "Military", 1, 1, 0, 0)])]))
-        self.assets.append(entity(self, "Hiigarans", 0, 0, 0, 0, [entity(self, "Cor-Hig", 6, 1, 0, 0)]))
-        self.assets.append(entity(self, "Tau", 0, 0, 0, 0, [entity(self, "Tau", 4, 2, 4, 3)]))
-
         # Faction Switch
 
         self.factions = Combobox(self, width=15)
@@ -38,6 +65,10 @@ class Assets(Frame):
         for i in self.assets:
             self.factions['values'] = (*self.factions['values'], i.name)
         self.factions.grid(column=0, row=0, sticky=W)
+
+        if len(self.factions['values']) != 0:
+            self.factions.current(0)
+            self.switch()
 
         self.switch_btn = Button(self, width=15, text="switch faction", command=self.switch)
         self.switch_btn.grid(column=1, row=0, sticky=W)
@@ -50,10 +81,15 @@ class Assets(Frame):
         self.budget_btn = Button(self, width=15, text="Calculate Budget", command=self.budget)
         self.budget_btn.grid(column=3, row=0, sticky=W)
 
-        # Update stats
+        # Add Faction
 
-        self.update_btn = Button(self, width=15, text="Update Stats", command=self.update)
-        self.update_btn.grid(column=4, row=0, sticky=W)
+        self.add_btn = Button(self, width=15, text="Add Faction", command=self.add)
+        self.add_btn.grid(column=4, row=0, sticky=W)
+
+        # Remove Faction
+
+        self.remove_btn = Button(self, width=15, text="Remove Faction", command=self.remove)
+        self.remove_btn.grid(column=5, row=0, sticky=W)
 
         # Blanks
 
@@ -78,7 +114,8 @@ class Assets(Frame):
         raw = Label(self, text="Income", width=15)
         raw.grid(column=0, row=6)
 
-
+        # Start the Clock
+        self.clock()
 
 if __name__ == "__main__":
     window = Tk()
