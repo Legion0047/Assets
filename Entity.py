@@ -50,6 +50,24 @@ class entity:
         for i in range(len(self.entities)):
             self.remove_btn.append(Button(self.window, width=15, text="Remove Entity", command=partial(self.remove, i)))
 
+    def load(self, data):
+        for i in data:
+            self.entities.append(entity(self.window, i['name'], int(i['dev']), int(i['bonus']), int(i['mult']), int(i['raw'])))
+            self.remove_btn.append(Button(self.window, width=15, text="Remove Entity", command=partial(self.remove, len(self.entities)-1)))
+            self.entities[-1].load(i['entities'])
+
+    def save(self, data):
+        data.append({
+            'name': '%s' % self.name,
+            'dev': '%i' % self.dev,
+            'bonus': '%i' % self.bonus,
+            'mult': '%i' % self.mult,
+            'raw': '%i' % self.raw,
+            'entities': []
+        })
+        for i in self.entities:
+            i.save(data[-1]['entities'])
+
     def calcBudget(self, bonus=0):
         current = self.raw
         if len(self.entities) == 0:
@@ -147,8 +165,8 @@ class entity:
                 self.entities.pop(i)
                 self.remove_btn.pop(i)
 
-    def toString(self, ):
-        print("Name: %s, Dev: %i, Bonus: %i, Mult: %i, Raw: %i" %(self.name, self.dev, self.bonus, self.mult, self.raw))
-        print(self.entities)
+    def toString(self):
+        line = "Name: %s, Dev: %i, Bonus: %i, Mult: %i, Raw: %i\n" % (self.name, self.dev, self.bonus, self.mult, self.raw)
         for i in self.entities:
-            i.toString()
+            line += "    "+i.toString()
+        return line
