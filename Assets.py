@@ -1,10 +1,31 @@
-from datetime import datetime
+import json
 from tkinter import *
 from tkinter.ttk import *
 
 from Entity import entity as entity
 
 class Assets(Frame):
+
+    def save(self):
+        data = []
+        for i in self.assets:
+            i.save(data)
+        js = {}
+        js['Assets'] = data
+        with open('data.txt', 'w') as outfile:
+            json.dump(js, outfile, indent=4)
+
+
+    def load(self):
+        with open('data.txt') as json_file:
+            data = json.load(json_file)
+            assets = data['Assets']
+            for i in assets:
+                self.add(i['name'], int(i['dev']), int(i['bonus']), int(i['mult']), int(i['raw']))
+                self.assets[-1].load(i['entities'])
+
+            for i in self.assets:
+                print(i.toString())
 
     def remove(self):
         for i in range(len(self.assets)):
@@ -22,8 +43,8 @@ class Assets(Frame):
             self.switch()
 
 
-    def add(self):
-        self.assets.append(entity(self))
+    def add(self, name="New Entity", dev=0, bonus=0, mult=0, raw=0, entities=None):
+        self.assets.append(entity(self, name, dev, bonus, mult, raw, entities))
 
         self.factions['values'] = (*self.factions['values'], self.assets[-1].name)
 
@@ -91,6 +112,11 @@ class Assets(Frame):
         self.remove_btn = Button(self, width=15, text="Remove Faction", command=self.remove)
         self.remove_btn.grid(column=5, row=0, sticky=W)
 
+        # Save
+
+        self.save_btn = Button(self, width=15, text="Save", command=self.save)
+        self.save_btn.grid(column=5, row=0, sticky=W)
+
         # Blanks
 
         for i in range(20):
@@ -113,6 +139,8 @@ class Assets(Frame):
 
         raw = Label(self, text="Income", width=15)
         raw.grid(column=0, row=6)
+
+        self.load()
 
         # Start the Clock
         self.clock()
